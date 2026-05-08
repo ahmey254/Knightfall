@@ -5,11 +5,11 @@
   "description": "Knightfall — a modern full-stack chess web app",
   "scripts": {
     "dev": "node server.js",
-    "build": "next build",
+    "build": "npm run stockfish:install && next build",
     "start": "cross-env NODE_ENV=production node server.js",
     "lint": "next lint",
     "seed": "tsx --env-file=.env scripts/seed.ts",
-    "stockfish:install": "node -e \"const fs=require('fs');const p=require('path');fs.mkdirSync('public/stockfish',{recursive:true});['stockfish.js','stockfish.wasm'].forEach(f=>fs.copyFileSync(p.join('node_modules/stockfish/src',f),p.join('public/stockfish',f)));console.log('Stockfish installed to public/stockfish/');\"",
+    "stockfish:install": "node scripts/install-stockfish.js",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

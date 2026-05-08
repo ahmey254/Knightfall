@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   description:
     'Knightfall is a modern, real-time chess platform. Play online, train against Stockfish, analyze games, and climb the leaderboard.',
   manifest: '/manifest.json',
-  themeColor: '#070912',
   openGraph: {
     title: 'Knightfall — Modern Chess',
     description: 'Play, train, and master chess with a modern dark-tech experience.',

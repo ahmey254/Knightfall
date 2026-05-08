@@ -20,8 +20,8 @@ export async function getPublicUser(username: string): Promise<PublicUser | null
     gamesPlayed: u.gamesPlayed,
     badges: u.badges ?? [],
     online: u.online,
-    country: u.country,
-    bio: u.bio,
+    country: u.country ?? undefined,
+    bio: u.bio ?? undefined,
     createdAt: (u.createdAt as Date).toISOString(),
   };
 }

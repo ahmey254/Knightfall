@@ -38,7 +38,7 @@ export function useSocket(autoConnect = true) {
     if (!socketRef.current || !connected) return;
     socketRef.current.emit('connect_user', {
       userId: session?.user?.id,
-      username: session?.user?.username || session?.user?.name || 'Guest',
+      username: session?.user?.username || 'Guest',
       rating: session?.user?.rating,
     });
   }, [session, connected]);
