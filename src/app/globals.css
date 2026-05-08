@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  color-scheme: dark;
+}
+
+html, body {
+  background: #070912;
+  color: #e7e9f5;
+  min-height: 100vh;
+}
+
+body {
+  background-image:
+    radial-gradient(900px 500px at 10% -10%, rgba(124, 92, 255, 0.18), transparent 60%),
+    radial-gradient(800px 600px at 110% 10%, rgba(34, 211, 238, 0.10), transparent 60%),
+    radial-gradient(600px 400px at 50% 110%, rgba(255, 77, 141, 0.08), transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Subtle grain to give the dark surface texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  z-index: 0;
+}
+
+@layer components {
+  .glass {
+    @apply bg-bg-card/60 backdrop-blur-xl border border-white/5;
+  }
+  .glass-strong {
+    @apply bg-bg-card/80 backdrop-blur-2xl border border-white/10;
+  }
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent via-accent-cyan to-accent-hot;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-semibold
+           bg-gradient-to-r from-accent to-accent-cyan text-white shadow-glow
+           hover:shadow-glow-cyan transition-all duration-200 active:scale-95
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-semibold
+           border border-white/10 bg-white/5 hover:bg-white/10 transition-colors;
+  }
+  .input {
+    @apply w-full rounded-xl bg-bg-soft/80 border border-white/10 px-4 py-2.5
+           focus:outline-none focus:border-accent/60 focus:ring-2 focus:ring-accent/20
+           placeholder:text-muted/60 transition-colors;
+  }
+  .card {
+    @apply glass rounded-2xl shadow-card;
+  }
+  .ring-accent-glow {
+    box-shadow: 0 0 0 1px rgba(124, 92, 255, 0.4), 0 0 24px rgba(124, 92, 255, 0.25);
+  }
+}
+
+/* Loading skeleton shimmer */
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.05) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+  @apply rounded-md;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(124, 92, 255, 0.25); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(124, 92, 255, 0.45); }
+
+/* Chessboard tweaks — react-chessboard renders inline styles, but we can theme via CSS vars */
+[data-square] { transition: background-color 120ms ease; }

@@ -1,0 +1,57 @@
+{
+  "name": "knightfall-chess",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Knightfall — a modern full-stack chess web app",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "cross-env NODE_ENV=production node server.js",
+    "lint": "next lint",
+    "seed": "tsx --env-file=.env scripts/seed.ts",
+    "stockfish:install": "node -e \"const fs=require('fs');const p=require('path');fs.mkdirSync('public/stockfish',{recursive:true});['stockfish.js','stockfish.wasm'].forEach(f=>fs.copyFileSync(p.join('node_modules/stockfish/src',f),p.join('public/stockfish',f)));console.log('Stockfish installed to public/stockfish/');\"",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@auth/mongodb-adapter": "^3.7.4",
+    "axios": "^1.7.9",
+    "bcryptjs": "^2.4.3",
+    "chess.js": "^1.0.0-beta.8",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.15.0",
+    "mongodb": "^6.12.0",
+    "mongoose": "^8.9.5",
+    "next": "15.1.4",
+    "next-auth": "^4.24.11",
+    "react": "19.0.0",
+    "react-chessboard": "^4.7.2",
+    "react-dom": "19.0.0",
+    "react-hot-toast": "^2.4.1",
+    "recharts": "^2.15.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "stockfish": "^16.0.0",
+    "tailwind-merge": "^2.6.0",
+    "uuid": "^11.0.4",
+    "zod": "^3.24.1",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.4",
+    "@types/react-dom": "^19.0.2",
+    "@types/uuid": "^10.0.0",
+    "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "15.1.4",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}
