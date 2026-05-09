@@ -1,0 +1,27 @@
+# Fly.io config for Knightfall.
+# Replace `app` with the name `flyctl launch` assigns (or pick your own).
+# Region list: https://fly.io/docs/reference/regions/
+
+app = "knightfall"
+primary_region = "iad"
+
+[build]
+
+[env]
+  NODE_ENV = "production"
+  NEXT_TELEMETRY_DISABLED = "1"
+  PORT = "3000"
+  NEXT_PUBLIC_APP_NAME = "Knightfall"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256
