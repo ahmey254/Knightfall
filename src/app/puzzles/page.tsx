@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Chess } from 'chess.js';
 import toast from 'react-hot-toast';
 import { Board } from '@/components/chess/Board';
@@ -17,13 +17,22 @@ interface Puzzle {
   rating: number;
 }
 
+const PIECE_NAMES: Record<string, string> = {
+  p: 'pawn',
+  n: 'knight',
+  b: 'bishop',
+  r: 'rook',
+  q: 'queen',
+  k: 'king',
+};
+
 export default function PuzzlesPage() {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [chess, setChess] = useState<Chess | null>(null);
   const [fen, setFen] = useState('');
   const [stepIndex, setStepIndex] = useState(0);
   const [solved, setSolved] = useState(false);
-  const [hintShown, setHintShown] = useState(false);
+  const [hintLevel, setHintLevel] = useState(0); // 0 = hidden, 1 = piece+square, 2 = full SAN
   const replyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const playSound = useSound();
 
@@ -64,7 +73,7 @@ export default function PuzzlesPage() {
       return false;
     }
     setFen(chess.fen());
-    setHintShown(false);
+    setHintLevel(0);
     playSound('move');
     const next = stepIndex + 1;
     if (next >= puzzle.solution.length) {
@@ -108,8 +117,21 @@ export default function PuzzlesPage() {
     setFen(c.fen());
     setStepIndex(0);
     setSolved(false);
-    setHintShown(false);
+    setHintLevel(0);
   }
+
+  // Resolve the expected move on the *current* position so we can describe it
+  // in a hint. Returns null when it's the opponent's turn (auto-reply pending)
+  // or the puzzle is solved.
+  const hintTarget = useMemo(() => {
+    if (!chess || !puzzle || solved) return null;
+    if (stepIndex % 2 !== 0) return null;
+    const san = puzzle.solution[stepIndex];
+    if (!san) return null;
+    const m = chess.moves({ verbose: true }).find((mv) => mv.san === san);
+    if (!m) return null;
+    return { san, from: m.from, piece: m.piece };
+  }, [chess, puzzle, stepIndex, solved, fen]);
 
   if (!puzzle) return <div className="text-muted text-center py-20">Loading puzzle…</div>;
 
@@ -131,14 +153,25 @@ export default function PuzzlesPage() {
           <div className="text-sm text-muted">
             {chess?.turn() === 'w' ? 'White' : 'Black'} to move. Find the best continuation.
           </div>
-          {hintShown && (
+          {hintLevel >= 1 && hintTarget && (
             <div className="mt-2 text-sm">
-              Hint: <span className="font-mono">{puzzle.solution[stepIndex]?.[0] ?? '—'}…</span>
+              Hint: move your <span className="font-medium">{PIECE_NAMES[hintTarget.piece]}</span> from{' '}
+              <span className="font-mono">{hintTarget.from}</span>.
+            </div>
+          )}
+          {hintLevel >= 2 && hintTarget && (
+            <div className="mt-1 text-sm">
+              Solution: <span className="font-mono font-semibold">{hintTarget.san}</span>
             </div>
           )}
           <div className="mt-3 flex gap-2">
-            <Button size="sm" variant="ghost" onClick={() => setHintShown(true)} disabled={solved}>
-              Hint
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setHintLevel((l) => Math.min(l + 1, 2))}
+              disabled={solved || !hintTarget || hintLevel >= 2}
+            >
+              {hintLevel === 0 ? 'Hint' : hintLevel === 1 ? 'Reveal move' : 'Revealed'}
             </Button>
             <Button size="sm" onClick={reset}>Reset</Button>
           </div>

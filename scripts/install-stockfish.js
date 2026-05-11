@@ -27,9 +27,13 @@ for (const v of VARIANTS) {
   const js = path.join(SRC_DIR, `${v}.js`);
   const wasm = path.join(SRC_DIR, `${v}.wasm`);
   if (fs.existsSync(js) && fs.existsSync(wasm)) {
+    // App loads /stockfish/stockfish.js as a Worker, but the JS bundle has its
+    // WASM filename (e.g. stockfish-nnue-16-single.wasm) baked in. Copy the
+    // WASM under BOTH names so the Worker's internal fetch resolves.
     fs.copyFileSync(js, path.join(DEST_DIR, 'stockfish.js'));
     fs.copyFileSync(wasm, path.join(DEST_DIR, 'stockfish.wasm'));
-    console.log(`[stockfish] installed ${v} -> ${DEST_DIR}/stockfish.{js,wasm}`);
+    fs.copyFileSync(wasm, path.join(DEST_DIR, `${v}.wasm`));
+    console.log(`[stockfish] installed ${v} -> stockfish.js + ${v}.wasm (+ stockfish.wasm)`);
     process.exit(0);
   }
 }
